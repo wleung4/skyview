@@ -1,3 +1,38 @@
-.searchbar {
-	
+body {
+	display: flex;
+	justify-content: center;
+}
+
+.home {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	> p {
+		font-size: 50px;
+		padding: 20px 20px;
+	}
+}
+
+.search-bar {
+	width: 100%;
+	max-width: 1000px;
+	display: flex;
+	justify-content: center;
+
+	> input {
+		border: 1px solid black;
+		border-radius: 15px;
+		background-color: transparent;
+		padding: 20px 15px;
+		width: 600px;
+		font-size: 20px;
+	}
+}
+
+.search-button {
+	height: 50px;
+	width: 50px;
+	padding: 5px 5px;
+	border-radius: 15px;
 }

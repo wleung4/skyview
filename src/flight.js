@@ -6,8 +6,7 @@ let aircraftFlights;
 const url = "https://opensky-network.org/api/flights/";
 
 // Get all flights between time frame < 2 hrs
-const getAllFlights = async (begin, end, e)  => {
-	//e.preventDefault();
+export const getAllFlights = async (begin, end)  => {
 	// beginning and ending in unix time, seconds since epoch
 	try {
 		const res = await fetch(url + `all?begin=${begin}&end=${end}`, {headers: {
@@ -28,15 +27,15 @@ const getAllFlights = async (begin, end, e)  => {
 }
 
 // Get flight information for aircraft departed and arrived within time frame < 30 days
-const getAircraft = async(icao24, begin, end) => {
+export const getAircraft = async(icao24, begin, end) => {
 	try {
 		const res = await fetch(url + `aircraft?icao24=${icao24}&begin=${begin}&end=${end}`, {headers: {
 			'Accept': 'application/json'
 		}});
 		if(res.ok) {
 			const data = await res.json();
-			console.log('aircraft:');
-			console.log(data);
+			//console.log('aircraft:');
+			//console.log(data);
 			aircraftFlights = data;
 			return data;
 		} else {
@@ -47,16 +46,16 @@ const getAircraft = async(icao24, begin, end) => {
 	}
 }
 
-// Get all airport arrivals at specific airport, time frame < 1 week
-const getAirportArrivals = async (airport, begin, end) => {
+// Get all airport arrivals at specific airport, time frame < 1 week, arrival data from previous day or earlier
+export const getAirportArrivals = async (airport, begin, end) => {
 	try {
 		const res = await fetch(url + `arrival?airport=${airport}&begin=${begin}&end=${end}`, {headers: {
 			'Accept': 'application/json'
 		}});
 		if(res.ok) {
 			const data = await res.json();
-			console.log('arrivals:');
-			console.log(data);
+			//console.log('arrivals:');
+			//console.log(data);
 			arrivalFlights = data;
 			return data;
 		} else {
@@ -67,16 +66,16 @@ const getAirportArrivals = async (airport, begin, end) => {
 	}
 }
 
-// Get all airport departures at specific airport, time frame < 1 week
-const getAirportDepartures = async (airport, begin, end) => {
+// Get all flight depatures at specific airport, time frame < 1 week, ALWAYS UP TO DATE
+export const getAirportDepartures = async (airport, begin, end) => {
 	try {
 		const res = await fetch(url + `departure?airport=${airport}&begin=${begin}&end=${end}`, {headers: {
 			'Accept': 'application/json'
 		}});
 		if(res.ok) {
 			const data = await res.json();
-			console.log('departures:'); 
-			console.log(data);
+			//console.log('departures:'); 
+			//console.log(data);
 			departureFlights = data;
 			return data;
 		} else {
@@ -87,20 +86,21 @@ const getAirportDepartures = async (airport, begin, end) => {
 	}
 }
 
-
-
 // convert user input time
-const calculateTime = (time = 0) => {
-	return Math.floor(new Date(time) / 1000);
+export const calculateTime = () => {
+	return Math.floor(new Date() / 1000);
 }
-const airport = 'KSFO';
-const begin = 1689964222;
-const end = 1689965278;
 
-const start = 1689445822;
-const plane = 'a6f5b5'; 
-//getAllFlights(begin, end);
+
+// const airport = 'KSFO';
+// const begin = 1690090801;
+// const end = 1690177414;
+
+// const start = 1689445822;
+// const plane = 'a6f5b5'; 
+
+// getAllFlights(begin, end);
 // getAirportArrivals(airport, start, end);
-// getAirportDepartures(airport, start, end);
+// getAirportDepartures(airport, begin, end);
 // getAircraft(plane, start, end);
 
