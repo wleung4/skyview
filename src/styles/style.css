@@ -1,6 +1,6 @@
 body {
-	display: flex;
-	justify-content: center;
+	font-size: 100%;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .home {
@@ -8,11 +8,13 @@ body {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+
 	> p {
 		font-size: 50px;
 		padding: 20px 20px;
 	}
 }
+
 
 .search-bar {
 	width: 100%;
@@ -36,3 +38,45 @@ body {
 	padding: 5px 5px;
 	border-radius: 15px;
 }
+
+.main-page {
+	display: flex;
+	justify-content: center;
+}
+
+.header {
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.table-style {
+	margin: 20px;
+	max-height: 600;
+	overflow-y: scroll;
+	
+	> tr {
+		margin: 10px;
+	}
+}
+
+td {
+	border: 1px solid black;
+	padding: 10px 10px;
+
+}
+
+tr:nth-child(even){
+	background-color: lightgray;
+}
+
+.map-style {
+	max-width: 800;
+	max-height: 600;
+	background-color: lightblue;
+	stroke: black;
+	stroke-width: 0.3;
+	fill: teal;
+	border: 1px solid black;
+	margin: 20px;
+}
+

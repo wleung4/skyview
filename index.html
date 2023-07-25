@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="./dist/main.css" />
 	<link rel="stylesheet" type="text/css" href="./src/styles/reset.css"/>
 	<link rel="stylesheet" type="text/css" href="./src/styles/style.css"/>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<script src="https://d3js.org/topojson.v3.min.js"></script>
 	<script type="module" src="./src/index.js"></script>
     <script type="application/javascript" src="./dist/main.js" defer></script>
     <title>SkyView</title>
@@ -18,6 +20,10 @@
 				<input id="search" type="text" placeholder="Search an Airport">
 				<button type="submit"><img class="search-button" src="assets/search-button.png"></button>
 			</form>
+		</div>
+		<div class="main-page">
+			<div id="map" class="map-style"></div>
+			<div id="flight-table"></div>
 		</div>
   </body>
 
