@@ -2,10 +2,11 @@ import { getAirportICAO } from './scripts/airport.js';
 import { calculateTime, getAircraft, getAirportArrivals, getAirportDepartures, getAllFlights } from './scripts/flight.js';
 import { addMap } from './scripts/map.js';
 
-const searchForm = document.getElementById("search-form");
+const searchForm = document.querySelector(".home-search");
 const searchValue = document.getElementById("search");
-//const airportName = document.getElementById("airport-name");
 const flightTable = document.getElementById("flight-table");
+const mainPage = document.querySelector(".main-page");
+const background = document.querySelector("#background");
 
 let departures;
 let arrivals;
@@ -13,34 +14,23 @@ searchForm.addEventListener("submit", async(e) => {
 	e.preventDefault();
 	const value = searchValue.value;
 	searchForm.style.display = 'none';
-	//allFlights = await getAllFlights(calculateTime() - 2*3600, calculateTime());
+	mainPage.style.display = "flex";
+	background.style.display = "none";
 
+	// airport ICAO
 	const airportICAO = await getAirportICAO(value);
-	//console.log("Airport ICAO:", airportICAO);
 	
 	// 1 day = 86400, 1 hr = 3600
 	departures = await getAirportDepartures(airportICAO, calculateTime() - 3600, calculateTime());
-	//console.log("Airport Departures from past hr to now: ", departures);
+	console.log("Airport Departures from past hr to now: ", departures);
 	
-	console.log("Departures: ");
+	//console.log("Departures: ");
 	// callsign = Plane identifier i.e. DAL767
 	//departures.forEach(departure => console.log(`Plane number: ${departure.callsign}`, `ICAO: ${departure.icao24}`));
 
-	console.log(departures);
-
+	//console.log(departures);
 	addFlightTable(departures);
 	addMap();
-	// get departure aircraft information for past day	
-	// console.log("Departures Aircraft info for past day:")
-	// for(let i = 0; i < departures.length; i++){
-	// 	const info = await getAircraft(departures[i].icao24, calculateTime() - 86400, calculateTime());
-	// 	if(departures[i].length === 0){
-	// 		console.log(`Information about ${departures[i].callsign} is N/A`)
-	// 	} else {
-	// 		console.log(`Information about ${departures[i].callsign}: `, info);
-	// 	}
-	// }
-
 	// get arrival aircraft info for past day
 	//arrivals = await getAirportArrivals(airportICAO, calculateTime() - 86400*2, calculateTime());
 	// console.log("Airport Arrivals from 2 days ago:", arrivals);
@@ -51,15 +41,10 @@ searchForm.addEventListener("submit", async(e) => {
 	// console.log("Arrivals Aircraft info for past 2 days:")
 	// for(let i = 0; i < arrivals.length; i++){
 	// 	const info = await getAircraft(arrivals[i].icao24, calculateTime() - 86400*2, calculateTime());
-	// 	if(arrivals[i].length === 0){
-	// 		console.log(`Information about ${arrivals[i].callsign} is N/A`)
-	// 	} else {
-	// 		console.log(`Information about ${arrivals[i].callsign}: `, info);
-	// 	}
 	// }
 });
 
-const addFlightTable = (info) => {
+const addFlightTable = async(info) => {
 	let table = document.createElement("table");
 	let tableBody = document.createElement("tbody");
 
