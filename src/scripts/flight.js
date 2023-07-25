@@ -15,10 +15,10 @@ export const getFlightLocation = async(icao24, time = 0) => {
 		if(res.ok) {
 			const data = await res.json();
 			const lastLocation = data.path[data.path.length - 1];
-			console.log(lastLocation);
-			console.log("Latitude:" , lastLocation[1]);
-			console.log("Longitude:" , lastLocation[2]);
-			return data;
+			console.log("Last reported Latitude:" , lastLocation[1]);
+			console.log("Last reported Longitude:" , lastLocation[2]);
+			console.log(data.path);
+			return data.path;
 		} else {
 			throw new Error('response not ok');
 		}
@@ -32,13 +32,9 @@ export const getAllFlights = async (begin, end)  => {
 	try {
 		const res = await fetch(url + `all?begin=${begin}&end=${end}`, {headers: {
 			'Accept': 'application/json'
-			//'Access-Control-Allow-Origin': '*',
-			//'mode': 'no-cors'
 		}});
 		if(res.ok){
 			const data = await res.json();
-			console.log('all flights');
-			console.log(data);
 			allFlights = data;
 			return data;
 		} else {
@@ -57,8 +53,6 @@ export const getAircraft = async(icao24, begin, end) => {
 		}});
 		if(res.ok) {
 			const data = await res.json();
-			//console.log('aircraft:');
-			//console.log(data);
 			aircraftFlights = data;
 			return data;
 		} else {
@@ -77,8 +71,6 @@ export const getAirportArrivals = async (airport, begin, end) => {
 		}});
 		if(res.ok) {
 			const data = await res.json();
-			//console.log('arrivals:');
-			//console.log(data);
 			arrivalFlights = data;
 			return data;
 		} else {
@@ -97,8 +89,6 @@ export const getAirportDepartures = async (airport, begin, end) => {
 		}});
 		if(res.ok) {
 			const data = await res.json();
-			//console.log('departures:'); 
-			//console.log(data);
 			departureFlights = data;
 			return data;
 		} else {
@@ -114,16 +104,5 @@ export const calculateTime = () => {
 	return Math.floor(new Date() / 1000);
 }
 
-// getFlightLocation('ac3a60');
-// const airport = 'KSFO';
-// const begin = 1690090801;
-// const end = 1690177414;
 
-// const start = 1689445822;
-// const plane = 'a6f5b5'; 
-
-// getAllFlights(begin, end);
-// getAirportArrivals(airport, start, end);
-// getAirportDepartures(airport, begin, end);
-// getAircraft(plane, start, end);
 

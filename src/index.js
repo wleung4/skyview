@@ -1,5 +1,5 @@
-import { getAirportICAO } from './scripts/airport.js';
-import { calculateTime, getAircraft, getAirportArrivals, getAirportDepartures, getAllFlights } from './scripts/flight.js';
+import { getAirportInfo } from './scripts/airport.js';
+import { calculateTime, getAircraft, getAirportArrivals, getAirportDepartures, getAllFlights, getFlightLocation } from './scripts/flight.js';
 import { addMap } from './scripts/map.js';
 
 const searchForm = document.querySelector(".home-search");
@@ -10,6 +10,7 @@ const background = document.querySelector("#background");
 
 let departures;
 let arrivals;
+let locations;
 searchForm.addEventListener("submit", async(e) => {
 	e.preventDefault();
 	const value = searchValue.value;
@@ -18,19 +19,18 @@ searchForm.addEventListener("submit", async(e) => {
 	background.style.display = "none";
 
 	// airport ICAO
-	const airportICAO = await getAirportICAO(value);
-	
+	const airportInfo = await getAirportInfo(value);
+	const airportICAO = airportInfo[0];
+	const airportLatitude = airportInfo[1];
+	const airportLongitude = airportInfo[2];
+
 	// 1 day = 86400, 1 hr = 3600
 	departures = await getAirportDepartures(airportICAO, calculateTime() - 3600, calculateTime());
 	console.log("Airport Departures from past hr to now: ", departures);
 	
-	//console.log("Departures: ");
 	// callsign = Plane identifier i.e. DAL767
-	//departures.forEach(departure => console.log(`Plane number: ${departure.callsign}`, `ICAO: ${departure.icao24}`));
-
-	//console.log(departures);
 	addFlightTable(departures);
-	addMap();
+	addMap([airportLongitude, airportLatitude]);
 	// get arrival aircraft info for past day
 	//arrivals = await getAirportArrivals(airportICAO, calculateTime() - 86400*2, calculateTime());
 	// console.log("Airport Arrivals from 2 days ago:", arrivals);
@@ -72,6 +72,15 @@ const addFlightTable = async(info) => {
 
 		const callsign = document.createElement("td");
 		callsign.textContent = info[i].callsign;
+		callsign.classList.add("clickable");
+
+		// allows clickable planes => gets location info about clicked plane
+		callsign.addEventListener("click", async(e) => {
+			e.stopPropagation();
+			locations = getFlightLocation(info[i].icao24);
+			console.log(locations);
+			//addPath(locations);
+		})
 
 		const departureTime = document.createElement("td");
 		const date = new Date(info[i].firstSeen * 1000).toString();
