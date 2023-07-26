@@ -98,7 +98,7 @@ export const drawPath = async(path) => {
 	g.append('path')
 		.data([coordinates])
 		.attr('fill', 'none')
-		.attr('stroke', 'add8e6')
-		.attr('stroke-width', 0.1)
+		.style('stroke', '#000080')
+		.style('stroke-width', 0.1)
 		.attr('d', lineGenerator)
 }

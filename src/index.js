@@ -30,7 +30,7 @@ searchForm.addEventListener("submit", async(e) => {
 	background.style.display = "none";
 
 	// 1 day = 86400, 1 hr = 3600
-	departures = await getAirportDepartures(airportICAO, calculateTime() - 3600*4, calculateTime());
+	departures = await getAirportDepartures(airportICAO, calculateTime(6), calculateTime());
 	console.log("Airport Departures from past 4 hrs to now: ", departures);
 	
 	// callsign = Plane identifier i.e. DAL767

@@ -99,9 +99,9 @@ export const getAirportDepartures = async (airport, begin, end) => {
 	}
 }
 
-// convert user input time
-export const calculateTime = () => {
-	return Math.floor(new Date() / 1000);
+// convert user input time in hrs
+export const calculateTime = (time = 0) => {
+	return Math.floor(new Date() / 1000) - time * 3600;
 }
 
 
