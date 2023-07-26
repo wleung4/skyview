@@ -1,5 +1,5 @@
+const airports = [];
 export const getAirportInfo = async (airportName) => {
-	const airports = [];
 	// "country_code","region_name","iata","icao","airport","latitude","longitude"
 	const res = await fetch('../iata-icao.csv');
 	const data = await res.text();
@@ -17,11 +17,9 @@ export const getAirportInfo = async (airportName) => {
 		airports.push({airport: airport,country_code: country_code, region_name: region_name, iata: iata, 
 			icao: icao, latitude: latitude, longitude: longitude});
 	})
-
 	// transform array of objects into single object where keys is the airport name
 	const airportObj = airports.reduce((obj, item) => Object.assign(obj, {[item.airport]:item}, {}));
 	//console.log(airportObj); // search for airport using airport name key, can key into
-
 	if (airportObj[airportName]) {
 		return [airportObj[airportName].icao, airportObj[airportName].latitude, airportObj[airportName].longitude];
 	} else {
@@ -29,6 +27,14 @@ export const getAirportInfo = async (airportName) => {
 	}
 }
 
-
-
+export const search = async(input) => {
+	await getAirportInfo(input);
+	const results = [];
+	airports.forEach(airportObj => {
+		if(airportObj.airport.toLowerCase().includes(input.toLowerCase())) {
+			if(!results.includes(airportObj.airport)) results.push(airportObj.airport);
+		}
+	})
+	return results;	
+}
 
