@@ -13,12 +13,15 @@ let departures;
 let arrivals;
 let locations;
 let timer = null;
-searchValue.addEventListener("keyup", async(e) => {
+
+searchValue.addEventListener("keyup", (e) => {
 	clearTimeout(timer);
 	timer = setTimeout(async()=>{
-		const matches = await search(searchValue.value);
-		console.log('searched');
-		console.log(matches);
+		if(searchValue.value !== "") {
+			const matches = await search(searchValue.value);
+			console.log('searched');
+			console.log(matches);
+		}
 	}, 750);
 }) 
 
