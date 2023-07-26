@@ -20,11 +20,15 @@ export const getAirportInfo = async (airportName) => {
 
 	// transform array of objects into single object where keys is the airport name
 	const airportObj = airports.reduce((obj, item) => Object.assign(obj, {[item.airport]:item}, {}));
-	//console.log(airportObj[airportName].icao); // search for airport using airport name key, can key into
-	return [airportObj[airportName].icao, airportObj[airportName].latitude, airportObj[airportName].longitude];
+	//console.log(airportObj); // search for airport using airport name key, can key into
+
+	if (airportObj[airportName]) {
+		return [airportObj[airportName].icao, airportObj[airportName].latitude, airportObj[airportName].longitude];
+	} else {
+		return undefined;
+	}
 }
 
-//getAirportICAO("Oakland International Airport");
 
 
 

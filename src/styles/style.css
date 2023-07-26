@@ -94,8 +94,8 @@ tr:nth-child(even){
 	max-height: 600;
 	background-color: lightblue;
 	stroke: black;
-	stroke-width: 0.3;
-	fill: teal;
+	stroke-width: 0.1;
+	fill: #90e9c9;
 	border: 1px solid black;
 	margin: 20px;
 }

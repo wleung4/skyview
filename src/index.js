@@ -13,16 +13,21 @@ let arrivals;
 let locations;
 searchForm.addEventListener("submit", async(e) => {
 	e.preventDefault();
-	const value = searchValue.value;
-	searchForm.style.display = 'none';
-	mainPage.style.display = "flex";
-	background.style.display = "none";
 
+	const value = searchValue.value;
 	// airport ICAO
-	const airportInfo = await getAirportInfo(value);
+	if(value === "") value = "N/A";
+	let airportInfo = await getAirportInfo(value);
+	while (!airportInfo) {
+		airportInfo = await getAirportInfo(value);
+	}
 	const airportICAO = airportInfo[0];
 	const airportLatitude = airportInfo[1];
 	const airportLongitude = airportInfo[2];
+
+	searchForm.style.display = 'none';
+	mainPage.style.display = "flex";
+	background.style.display = "none";
 
 	// 1 day = 86400, 1 hr = 3600
 	departures = await getAirportDepartures(airportICAO, calculateTime() - 3600, calculateTime());
@@ -30,7 +35,7 @@ searchForm.addEventListener("submit", async(e) => {
 	
 	// callsign = Plane identifier i.e. DAL767
 	addFlightTable(departures);
-	addMap([airportLongitude, airportLatitude]);
+	addMap([airportLongitude, airportLatitude], airportICAO);
 	// get arrival aircraft info for past day
 	//arrivals = await getAirportArrivals(airportICAO, calculateTime() - 86400*2, calculateTime());
 	// console.log("Airport Arrivals from 2 days ago:", arrivals);
