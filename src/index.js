@@ -1,6 +1,6 @@
 import { getAirportInfo } from './scripts/airport.js';
 import { calculateTime, getAirportDepartures, getFlightLocation } from './scripts/flight.js';
-import { addMap } from './scripts/map.js';
+import { addMap, drawPath } from './scripts/map.js';
 
 const searchForm = document.querySelector(".home-search");
 const searchValue = document.getElementById("search");
@@ -30,8 +30,8 @@ searchForm.addEventListener("submit", async(e) => {
 	background.style.display = "none";
 
 	// 1 day = 86400, 1 hr = 3600
-	departures = await getAirportDepartures(airportICAO, calculateTime() - 3600, calculateTime());
-	console.log("Airport Departures from past hr to now: ", departures);
+	departures = await getAirportDepartures(airportICAO, calculateTime() - 3600*4, calculateTime());
+	console.log("Airport Departures from past 4 hrs to now: ", departures);
 	
 	// callsign = Plane identifier i.e. DAL767
 	addFlightTable(departures);
@@ -83,8 +83,8 @@ const addFlightTable = async(info) => {
 		callsign.addEventListener("click", async(e) => {
 			e.stopPropagation();
 			locations = getFlightLocation(info[i].icao24);
-			console.log(locations);
-			//addPath(locations);
+			//console.log(locations);
+			drawPath(locations);
 		})
 
 		const departureTime = document.createElement("td");
