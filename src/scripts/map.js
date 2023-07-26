@@ -1,6 +1,6 @@
 let g;
 let projection;
-
+let airportLocation;
 export const addMap = (location, icao) => {
 	const height = 600;
 	const width = 800;
@@ -28,24 +28,16 @@ export const addMap = (location, icao) => {
 		.translate([width / 2, height / 2])
 		.scale(120);
 
-	zoom.scaleTo(svg, 30);
+	zoom.scaleTo(svg, 20);
 	
 	const path = d3.geoPath()
 		.projection(projection);
-
-	// const addPath = (coordinates) => {
-	// 	const lineGenerator = d3.line();
-	// 	let pathData = lineGenerator(coordinates);
-	// 	g.selectAll('path')
-	// 		.data([coordinates])
-	// 		.join('path')
-	// 		.attr('d',pathData)
-	// }
 	
 	d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
 		.then(data => {
 			const countries = topojson.feature(data, data.objects.countries);
 			const coordinates = projection(location);
+			airportLocation = coordinates;
 			g.selectAll('path')
 				.data(countries.features)
 				.enter()
@@ -72,11 +64,12 @@ export const addMap = (location, icao) => {
 		});	
 }
 
-export const drawPath = async(path) => {
+export const drawPath = async(path, plane) => {
+	// [time, latitude, longitude, baro_altitude, true_track, on_ground]
 	const waypoints = await path;
 	const coordinates = [];
+	coordinates.push(airportLocation);
 	waypoints.forEach((waypoint) => {
-		// [time, latitude, longitude, baro_altitude, true_track, on_ground]
 		coordinates.push(projection([waypoint[2], waypoint[1]]));
 	})
 	
@@ -101,4 +94,24 @@ export const drawPath = async(path) => {
 		.style('stroke', '#000080')
 		.style('stroke-width', 0.1)
 		.attr('d', lineGenerator)
+
+	const lastLocation = coordinates[coordinates.length - 1];
+	const lastAngle = waypoints[waypoints.length - 1][4];
+	const landed = waypoints[waypoints.length - 1][5];
+	console.log('last angle', lastAngle);
+	console.log('landed', landed);
+
+	g.append('image')
+		.attr('xlink:href', '../../assets/plane.png')
+		.attr('width', 1)
+		.attr('height', 1)
+		.attr('x', lastLocation[0] - .5)
+		.attr('y', lastLocation[1] - .5)
+		.attr('transform', `rotate(${lastAngle}, ${lastLocation[0]}, ${lastLocation[1]})`);
+	
+	g.append('text')
+		.attr('x', lastLocation[0] + .5)
+		.attr('y', lastLocation[1] + .5)
+		.text(plane) // `${plane} landed: ${landed}`
+		.style('font-size', '.75px');
 }

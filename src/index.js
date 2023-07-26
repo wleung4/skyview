@@ -24,13 +24,12 @@ searchForm.addEventListener("submit", async(e) => {
 	const airportICAO = airportInfo[0];
 	const airportLatitude = airportInfo[1];
 	const airportLongitude = airportInfo[2];
-
 	searchForm.style.display = 'none';
 	mainPage.style.display = "flex";
 	background.style.display = "none";
 
 	// 1 day = 86400, 1 hr = 3600
-	departures = await getAirportDepartures(airportICAO, calculateTime(6), calculateTime());
+	departures = await getAirportDepartures(airportICAO, calculateTime(4), calculateTime());
 	console.log("Airport Departures from past 4 hrs to now: ", departures);
 	
 	// callsign = Plane identifier i.e. DAL767
@@ -84,7 +83,7 @@ const addFlightTable = async(info) => {
 			e.stopPropagation();
 			locations = getFlightLocation(info[i].icao24);
 			//console.log(locations);
-			drawPath(locations);
+			drawPath(locations, callsign.textContent);
 		})
 
 		const departureTime = document.createElement("td");
