@@ -1,5 +1,3 @@
-import { beginHiddenCallStack } from "@babel/core/lib/errors/rewrite-stack-trace";
-
 export const addMap = (location, icao) => {
 	const height = 600;
 	const width = 800;

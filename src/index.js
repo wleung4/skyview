@@ -1,5 +1,5 @@
 import { getAirportInfo } from './scripts/airport.js';
-import { calculateTime, getAircraft, getAirportArrivals, getAirportDepartures, getAllFlights, getFlightLocation } from './scripts/flight.js';
+import { calculateTime, getAirportDepartures, getFlightLocation } from './scripts/flight.js';
 import { addMap } from './scripts/map.js';
 
 const searchForm = document.querySelector(".home-search");
