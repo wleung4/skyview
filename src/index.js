@@ -8,7 +8,9 @@ const searchResults = document.querySelector("#search-results");
 const flightTable = document.querySelector("#flight-table");
 const mainPage = document.querySelector(".main-page");
 const background = document.querySelector("#background");
-
+const instructions = document.querySelector(".instructions");
+const reset = document.querySelector(".reset");
+const map = document.querySelector("#map");
 
 let departures;
 let locations;
@@ -16,14 +18,30 @@ let airportName;
 let timer = null;
 searchValue.addEventListener("keyup", () => {
 	searchResults.style.display = "none";
+	instructions.style.display = "block";
 	clearTimeout(timer);
 	timer = setTimeout(async()=>{
 		if(searchValue.value !== "") {
+			instructions.style.display = "none"
 			const matches = await search(searchValue.value);
 			addResults(matches);
 		}
 	}, 500);
 }) 
+
+reset.addEventListener("click", (e) => {
+	e.preventDefault();
+	mainPage.style.display = "none";
+	map.style.display = "none";
+	searchForm.style.display = "flex";
+	background.style.display = "inline";
+	searchValue.value = "";
+	searchResults.style.display = "none";
+	instructions.style.display = "block";
+	reset.style.display = "none";
+	flightTable.removeChild(flightTable.firstChild);
+	d3.select("#map").select("svg").remove();
+})
 
 searchForm.addEventListener("submit", async(e) => {
 	e.preventDefault();
@@ -42,10 +60,11 @@ searchForm.addEventListener("submit", async(e) => {
 	searchForm.style.display = 'none';
 	mainPage.style.display = "flex";
 	background.style.display = "none";
+	reset.style.display = "block";
+	map.style.display = "block"
 
 	// 1 day = 86400, 1 hr = 3600
 	departures = await getAirportDepartures(airportICAO, calculateTime(6), calculateTime());
-	//console.log("Airport Departures from past 6 hrs to now: ", departures);
 	
 	// callsign = Plane identifier i.e. DAL767
 	addFlightTable(departures);
@@ -57,8 +76,6 @@ const addFlightTable = async(info) => {
 	let tableBody = document.createElement("tbody");
 
 	//top column name row
-	// const airportRow = document.createElement("tr")
-	// airportRow.textContent = `Departures from ${airportName}`;
 	const colRow = document.createElement("tr");
 	colRow.classList.add("header");
 	const callsignCol = document.createElement("td");
@@ -74,7 +91,6 @@ const addFlightTable = async(info) => {
 	colRow.appendChild(departureTimeCol);
 	colRow.appendChild(departureAirportCol);
 	colRow.appendChild(arrivalAirportCol);
-	//tableBody.appendChild(airportRow);
 	tableBody.appendChild(colRow);
 
 	// actual data

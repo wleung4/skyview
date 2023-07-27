@@ -51,7 +51,7 @@ export const addMap = (location, icao) => {
 				.attr('cx', coordinates[0])
 				.attr('cy', coordinates[1])
 				.attr('r', .25)
-				.style('fill', '#000000');
+				.style('fill', 'yellow');
 
 			g.selectAll('text')
 				.data(location)
@@ -60,7 +60,8 @@ export const addMap = (location, icao) => {
 				.attr('x', coordinates[0] + .5)
 				.attr('y', coordinates[1])
 				.text(icao)
-				.style('font-size', '1px');
+				.style('font-size', '1px')
+				.style('stroke', 'blue');
 		});	
 }
 
@@ -102,5 +103,6 @@ export const drawPath = async(path, plane) => {
 		.attr('x', lastLocation[0] + .75)
 		.attr('y', lastLocation[1] + .75)
 		.text(plane) // `${plane} landed: ${landed}`
-		.style('font-size', '.75px');
+		.style('font-size', '.75px')
+		.style('stroke', 'purple');
 }
