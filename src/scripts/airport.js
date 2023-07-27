@@ -3,6 +3,7 @@ let airportObj;
 export const getAllAirports = async () => {
 	// csv file row = "country_code","region_name","iata","icao","airport","latitude","longitude"
 	const res = await fetch('https://wleung4.github.io/skyview/iata-icao.csv');
+	
 	const data = await res.text();
 	const rows = data.split('\n').slice(1);
 	rows.forEach((ele)=>{

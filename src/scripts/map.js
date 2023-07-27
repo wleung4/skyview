@@ -91,7 +91,7 @@ export const drawPath = async(path, plane) => {
 	//const landed = waypoints[waypoints.length - 1][5];
 
 	g.append('image')
-		.attr('xlink:href', '../../assets/plane.png')
+		.attr('xlink:href', 'https://wleung4.github.io/skyview/assets/plane.png') // ../../assets/plane.png
 		.attr('width', 1.5)
 		.attr('height', 1.5)
 		.attr('x', lastLocation[0] - .75)
