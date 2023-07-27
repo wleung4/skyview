@@ -36,7 +36,6 @@ export const search = async(input) => {
 	await getAllAirports();
 	const results = [];
 	const keys = Object.keys(airportObj).slice(7);
-	// console.log('airportObj', airportObj);
 	keys.forEach(airport => {
 		if(airport.toLowerCase().includes(input.toLowerCase())){
 			results.push(airport);
