@@ -13,6 +13,32 @@ body {
 	width: 100vw;
 }
 
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	background: none;
+	background-color: transparent;
+	position: fixed;
+	z-index: 10;
+	width: 100%;
+}
+
+.icon {
+	height: 50px;
+	width: 50px;
+	padding: 5px 5px;
+}
+
+.footer {
+	font-size: 14px;
+	padding-left: 10px;
+	background: none;
+	background-color: transparent;
+	z-index: 100;
+	position: fixed;
+	bottom: 5px;
+}
+
 .home-search {
 	position: absolute;
 	display: flex;
@@ -95,117 +121,8 @@ body {
 	}
 }
 
-.reset-div {
-	width: 120px;
-	padding-left: 20px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-
-.reset {
-	display: none;
-	width: 100%;
-	height: 80%;
-	width: 80%;
-	border-radius: 15px;
-	font-size: 16px;
-	background-color: lightgray;
-}
-
-.reset:hover {
-	cursor: pointer;
-	background-color: gray;
-}
-
-.main-page {
-	display: none;
-	justify-content: center;
-}
-
-.header {
-	font-weight: bold;
-	font-size: 18px;
-}
-
-.table-style {
-	margin: 20px;
-	display: block;
-	max-height: 600;
-	overflow-y: auto;
-	border-collapse: collapse;
-
-	> tr {
-		margin: 10px;
-	}
-}
-
-td {
-	border: 1px solid black;
-	padding: 10px 10px;
-
-}
-
-tr:nth-child(even){
-	background-color: lightgray;
-}
-
-.map-style {
-	max-width: 800;
-	max-height: 600;
-	background-color: lightblue;
-	stroke: black;
-	stroke-width: 0.1;
-	fill: #90e9c9;
-	border: 1px solid black;
-	margin: 20px;
-	cursor: pointer;
-}
-
-
 #background {
 	height: 100%;
 	width: 100%;
 	object-fit: cover;
-}
-
-.clickable {
-	color: blue;
-	text-decoration: underline;
-}
-
-.clickable:hover {
-	cursor: pointer;
-	background-color: lightblue;
-}
-
-.plane-icon {
-	background: none;
-}
-
-.navbar {
-	display: flex;
-	justify-content: space-between;
-	background: none;
-	background-color: transparent;
-	position: fixed;
-	z-index: 10;
-	width: 100%;
-}
-
-.icon {
-	height: 50px;
-	width: 50px;
-	padding: 5px 5px;
-}
-
-.footer {
-	font-size: 14px;
-	padding-left: 10px;
-	background: none;
-	background-color: transparent;
-	z-index: 100;
-	position: fixed;
-	bottom: 5px;
 }
