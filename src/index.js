@@ -1,65 +1,55 @@
-import { async } from 'regenerator-runtime';
 import { getAirportInfo, search } from './scripts/airport.js';
 import { calculateTime, getAirportDepartures, getFlightLocation } from './scripts/flight.js';
 import { addMap, drawPath } from './scripts/map.js';
 
 const searchForm = document.querySelector(".home-search");
-const searchValue = document.getElementById("search");
-const flightTable = document.getElementById("flight-table");
+const searchValue = document.querySelector("#search");
+const searchResults = document.querySelector("#search-results");
+const flightTable = document.querySelector("#flight-table");
 const mainPage = document.querySelector(".main-page");
 const background = document.querySelector("#background");
 
-let departures;
-let arrivals;
-let locations;
-let timer = null;
 
-searchValue.addEventListener("keyup", (e) => {
+let departures;
+let locations;
+let airportName;
+let timer = null;
+searchValue.addEventListener("keyup", () => {
+	searchResults.style.display = "none";
 	clearTimeout(timer);
 	timer = setTimeout(async()=>{
 		if(searchValue.value !== "") {
 			const matches = await search(searchValue.value);
-			console.log('searched');
-			console.log(matches);
+			addResults(matches);
 		}
-	}, 750);
+	}, 500);
 }) 
 
 searchForm.addEventListener("submit", async(e) => {
 	e.preventDefault();
 
-	const value = searchValue.value;
+	let value = searchValue.value;
 	// airport ICAO
 	if(value === "") value = "N/A";
 	let airportInfo = await getAirportInfo(value);
 	while (!airportInfo) {
 		airportInfo = await getAirportInfo(value);
 	}
-	const airportICAO = airportInfo[0];
-	const airportLatitude = airportInfo[1];
-	const airportLongitude = airportInfo[2];
+	airportName = airportInfo[0];
+	const airportICAO = airportInfo[1];
+	const airportLatitude = airportInfo[2];
+	const airportLongitude = airportInfo[3];
 	searchForm.style.display = 'none';
 	mainPage.style.display = "flex";
 	background.style.display = "none";
 
 	// 1 day = 86400, 1 hr = 3600
-	departures = await getAirportDepartures(airportICAO, calculateTime(4), calculateTime());
-	//console.log("Airport Departures from past 4 hrs to now: ", departures);
+	departures = await getAirportDepartures(airportICAO, calculateTime(6), calculateTime());
+	//console.log("Airport Departures from past 6 hrs to now: ", departures);
 	
 	// callsign = Plane identifier i.e. DAL767
 	addFlightTable(departures);
 	addMap([airportLongitude, airportLatitude], airportICAO);
-	// get arrival aircraft info for past day
-	//arrivals = await getAirportArrivals(airportICAO, calculateTime() - 86400*2, calculateTime());
-	// console.log("Airport Arrivals from 2 days ago:", arrivals);
-
-	// console.log("Arrivals: ");
-	// arrivals.forEach(arrival => console.log(`Plane number: ${arrival.callsign}`, `ICAO: ${arrival.icao24}`));
-
-	// console.log("Arrivals Aircraft info for past 2 days:")
-	// for(let i = 0; i < arrivals.length; i++){
-	// 	const info = await getAircraft(arrivals[i].icao24, calculateTime() - 86400*2, calculateTime());
-	// }
 });
 
 const addFlightTable = async(info) => {
@@ -67,6 +57,8 @@ const addFlightTable = async(info) => {
 	let tableBody = document.createElement("tbody");
 
 	//top column name row
+	// const airportRow = document.createElement("tr")
+	// airportRow.textContent = `Departures from ${airportName}`;
 	const colRow = document.createElement("tr");
 	colRow.classList.add("header");
 	const callsignCol = document.createElement("td");
@@ -82,6 +74,7 @@ const addFlightTable = async(info) => {
 	colRow.appendChild(departureTimeCol);
 	colRow.appendChild(departureAirportCol);
 	colRow.appendChild(arrivalAirportCol);
+	//tableBody.appendChild(airportRow);
 	tableBody.appendChild(colRow);
 
 	// actual data
@@ -96,7 +89,7 @@ const addFlightTable = async(info) => {
 		callsign.addEventListener("click", async(e) => {
 			e.stopPropagation();
 			locations = getFlightLocation(info[i].icao24);
-			drawPath(locations, callsign.textContent);
+			if(locations !== 'No data found') drawPath(locations, callsign.textContent);
 		})
 
 		const departureTime = document.createElement("td");
@@ -125,3 +118,18 @@ const addFlightTable = async(info) => {
 	flightTable.classList.add("table-style");
 }
 
+const addResults = (matches) => {
+	while(searchResults.firstChild){
+		searchResults.removeChild(searchResults.firstChild);
+	}
+	matches.forEach(match => {
+		const result = document.createElement("div");
+		result.textContent = match;
+		result.addEventListener("click", (e)=> {
+			e.stopPropagation();
+			searchValue.value = result.textContent;
+		});
+		searchResults.appendChild(result);
+	});
+	searchResults.style.display = "block";
+}

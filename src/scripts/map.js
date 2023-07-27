@@ -66,22 +66,13 @@ export const addMap = (location, icao) => {
 
 export const drawPath = async(path, plane) => {
 	// [time, latitude, longitude, baro_altitude, true_track, on_ground]
-	const waypoints = await path;
 	const coordinates = [];
 	coordinates.push(airportLocation);
-	waypoints.forEach((waypoint) => {
+	const waypoints = await path;
+	console.log(waypoints);
+	waypoints.forEach(waypoint => {
 		coordinates.push(projection([waypoint[2], waypoint[1]]));
 	})
-	
-	// path using circles
-	// g.selectAll('circle')
-	// 	.data(coordinates)
-	// 	.enter()
-	// 	.append('circle')
-	// 	.attr('cx', d => d[0])
-	// 	.attr('cy', d => d[1])
-	// 	.attr('r', .1)
-	// 	.style('fill', '#ffffff');
 	
 	// path using line
 	const lineGenerator = d3.line()
@@ -91,27 +82,25 @@ export const drawPath = async(path, plane) => {
 	g.append('path')
 		.data([coordinates])
 		.attr('fill', 'none')
-		.style('stroke', '#000080')
+		.style('stroke', '#9c180c')
 		.style('stroke-width', 0.1)
 		.attr('d', lineGenerator)
 
 	const lastLocation = coordinates[coordinates.length - 1];
 	const lastAngle = waypoints[waypoints.length - 1][4];
-	const landed = waypoints[waypoints.length - 1][5];
-	console.log('last angle', lastAngle);
-	console.log('landed', landed);
+	//const landed = waypoints[waypoints.length - 1][5];
 
 	g.append('image')
 		.attr('xlink:href', '../../assets/plane.png')
-		.attr('width', 1)
-		.attr('height', 1)
-		.attr('x', lastLocation[0] - .5)
-		.attr('y', lastLocation[1] - .5)
+		.attr('width', 1.5)
+		.attr('height', 1.5)
+		.attr('x', lastLocation[0] - .75)
+		.attr('y', lastLocation[1] - .75)
 		.attr('transform', `rotate(${lastAngle}, ${lastLocation[0]}, ${lastLocation[1]})`);
 	
 	g.append('text')
-		.attr('x', lastLocation[0] + .5)
-		.attr('y', lastLocation[1] + .5)
+		.attr('x', lastLocation[0] + .75)
+		.attr('y', lastLocation[1] + .75)
 		.text(plane) // `${plane} landed: ${landed}`
 		.style('font-size', '.75px');
 }

@@ -1,10 +1,10 @@
 const airports = [];
-export const getAirportInfo = async (airportName) => {
-	// "country_code","region_name","iata","icao","airport","latitude","longitude"
+let airportObj;
+export const getAllAirports = async () => {
+	// csv file row = "country_code","region_name","iata","icao","airport","latitude","longitude"
 	const res = await fetch('../iata-icao.csv');
 	const data = await res.text();
 	const rows = data.split('\n').slice(1);
-
 	rows.forEach((ele)=>{
 		const row = ele.split(",");
 		const country_code = row[0].slice(1, row[0].length - 1);
@@ -18,23 +18,30 @@ export const getAirportInfo = async (airportName) => {
 			icao: icao, latitude: latitude, longitude: longitude});
 	})
 	// transform array of objects into single object where keys is the airport name
-	const airportObj = airports.reduce((obj, item) => Object.assign(obj, {[item.airport]:item}, {}));
-	//console.log(airportObj); // search for airport using airport name key, can key into
-	if (airportObj[airportName]) {
-		return [airportObj[airportName].icao, airportObj[airportName].latitude, airportObj[airportName].longitude];
-	} else {
-		return undefined;
+	airportObj = airports.reduce((obj, item) => Object.assign(obj, {[item.airport]:item}, {}));
+}
+
+export const getAirportInfo = async(airportName) => {
+	await getAllAirports();
+	for(const airport in airportObj) {
+		if (airport.toLowerCase() === airportName.toLowerCase()) {
+			return [airport, airportObj[airport].icao, airportObj[airport].latitude, airportObj[airport].longitude];
+		}
 	}
+	return undefined;
 }
 
 export const search = async(input) => {
-	await getAirportInfo(input);
+	await getAllAirports();
 	const results = [];
-	airports.forEach(airportObj => {
-		if(airportObj.airport.toLowerCase().includes(input.toLowerCase())) {
-			if(!results.includes(airportObj.airport)) results.push(airportObj.airport);
+	const keys = Object.keys(airportObj).slice(7);
+	// console.log('airportObj', airportObj);
+	keys.forEach(airport => {
+		if(airport.toLowerCase().includes(input.toLowerCase())){
+			results.push(airport);
 		}
 	})
+	if(results.length === 0) results.push('No Results Found')
 	return results;	
 }
 

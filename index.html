@@ -1,38 +1,47 @@
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="./dist/main.css" />
-	<link rel="icon" href="assets/favicon.ico">
-	<link rel="stylesheet" type="text/css" href="./src/styles/reset.css"/>
-	<link rel="stylesheet" type="text/css" href="./src/styles/style.css"/>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<link rel="stylesheet" href="./dist/main.css" />
+	<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="./src/styles/reset.css" />
+	<link rel="stylesheet" type="text/css" href="./src/styles/style.css" />
 	<script src="https://d3js.org/d3.v7.min.js"></script>
 	<script src="https://d3js.org/topojson.v3.min.js"></script>
-    <script type="application/javascript" src="./dist/main.js" defer></script>
-    <title>SkyView</title>
-  </head>
+	<script type="application/javascript" src="./dist/main.js" defer></script>
+	<title>SkyView</title>
+</head>
+<header>
+	<nav class="navbar">
+		<a href="https://github.com/wleung4" target="_blank"><img class="icon" src="./assets/github-mark.png"></a>
+		<a href="https://www.linkedin.com/in/weyman-leung-286a7a13a/" target="_blank"><img class="icon" src="./assets/linkedin.png"></a>
+	</nav>
+</header>
 
-  <body>
-		<div class="home"> 
-			<div class="home-search">
-				<p>SkyView</p>
-				<form id="search-form" class="search-bar">
-					<input id="search" type="text" placeholder="Search an Airport">
-					<button type="submit" class="search-button"><img src="assets/search-button.png"></button>
-				</form>
-			</div>
-			<video id="background" autoplay muted loop>
-				<source src="./assets/wing-video.mp4" type="video/mp4">
-			</video>
-			<div class="main-page">
-				<div id="map" class="map-style"></div>
-				<div>
-					<div></div>
-					<div id="flight-table"></div>
-				</div>
+<body>
+	<div class="home">
+		<div class="home-search">
+			<p>SkyView</p>
+			<form id="search-form" class="search-bar">
+				<input id="search" type="text" placeholder="Search for an Airport" autocomplete="off">
+				<button type="submit" class="search-button"><img src="assets/search-button.png"></button>
+			</form>
+			<div id="search-results"></div>
+		</div>
+		<video id="background" autoplay muted loop>
+			<source src="./assets/wing-video.mp4" type="video/mp4">
+		</video>
+		<div class="main-page">
+			<div id="map" class="map-style"></div>
+			<div>
+				<div id="flight-table"></div>
 			</div>
 		</div>
-  </body>
-
+	</div>
+</body>
+<footer class="footer">
+	API provided by The OpenSky Network, <a href="https://opensky-network.org" target="_blank">https://opensky-network.org</a>
+</footer>
 </html>

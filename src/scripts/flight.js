@@ -14,10 +14,6 @@ export const getFlightLocation = async(icao24, time = 0) => {
 		}})
 		if(res.ok) {
 			const data = await res.json();
-			const lastLocation = data.path[data.path.length - 1];
-			// console.log("Last reported Latitude:" , lastLocation[1]);
-			// console.log("Last reported Longitude:" , lastLocation[2]);
-			console.log(data.path);
 			return data.path;
 		} else {
 			throw new Error('response not ok');
