@@ -70,7 +70,6 @@ export const drawPath = async(path, plane) => {
 	const coordinates = [];
 	coordinates.push(airportLocation);
 	const waypoints = await path;
-	console.log(waypoints);
 	waypoints.forEach(waypoint => {
 		coordinates.push(projection([waypoint[2], waypoint[1]]));
 	})

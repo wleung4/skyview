@@ -1,5 +1,5 @@
 .reset-div {
-	width: 120px;
+	width: 150px;
 	padding-left: 20px;
 	display: flex;
 	flex-direction: column;
@@ -19,7 +19,7 @@
 
 .reset:hover {
 	cursor: pointer;
-	background-color: gray;
+	background-color: rgb(151, 131, 131);
 }
 
 .main-page {
