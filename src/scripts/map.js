@@ -85,6 +85,7 @@ export const drawPath = async(path, plane) => {
 		.style('stroke', '#9c180c')
 		.style('stroke-width', 0.1)
 		.attr('d', lineGenerator)
+		.attr('class', 'flight-path')
 
 	const lastLocation = coordinates[coordinates.length - 1];
 	const lastAngle = waypoints[waypoints.length - 1][4];
@@ -96,12 +97,20 @@ export const drawPath = async(path, plane) => {
 		.attr('height', 1.5)
 		.attr('x', lastLocation[0] - .75)
 		.attr('y', lastLocation[1] - .75)
-		.attr('transform', `rotate(${lastAngle}, ${lastLocation[0]}, ${lastLocation[1]})`);
+		.attr('transform', `rotate(${lastAngle}, ${lastLocation[0]}, ${lastLocation[1]})`)
+		.attr('class', 'flight-image')
 	
 	g.append('text')
 		.attr('x', lastLocation[0] + .75)
 		.attr('y', lastLocation[1] + .75)
 		.text(plane) // `${plane} landed: ${landed}`
 		.style('font-size', '.75px')
-		.style('stroke', 'purple');
+		.style('stroke', 'purple')
+		.attr('class', 'flight-text')
+}
+
+export const resetPaths = () => {
+	g.selectAll('.flight-path').remove();
+	g.selectAll('.flight-image').remove();
+	g.selectAll('.flight-text').remove();
 }

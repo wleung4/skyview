@@ -1,6 +1,6 @@
 import { getAirportInfo, search } from './scripts/airport.js';
 import { calculateTime, getAirportDepartures, getFlightLocation } from './scripts/flight.js';
-import { addMap, drawPath } from './scripts/map.js';
+import { addMap, drawPath, resetPaths } from './scripts/map.js';
 
 const searchForm = document.querySelector(".home-search");
 const searchValue = document.querySelector("#search");
@@ -11,23 +11,31 @@ const background = document.querySelector("#background");
 const instructions = document.querySelector(".instructions");
 const reset = document.querySelector(".reset");
 const map = document.querySelector("#map");
+const resetMapPaths = document.querySelector(".reset-paths");
 
 let departures;
 let locations;
 let airportName;
 let timer = null;
+let resultClicked = false;
+
 searchValue.addEventListener("keyup", () => {
-	searchResults.style.display = "none";
-	instructions.style.display = "block";
 	clearTimeout(timer);
-	timer = setTimeout(async()=>{
-		if(searchValue.value !== "") {
-			instructions.style.display = "none"
-			const matches = await search(searchValue.value);
-			addResults(matches);
-		}
-	}, 500);
-}) 
+
+	if (!resultClicked) {
+		timer = setTimeout(async () => {
+			if (searchValue.value !== "") {
+				const matches = await search(searchValue.value);
+				instructions.style.display = "none";
+				addResults(matches);
+			} else {
+				searchResults.style.display = "none";
+				instructions.style.display = "block";
+			}
+		}, 500);
+	}
+	resultClicked = false;
+})
 
 reset.addEventListener("click", (e) => {
 	e.preventDefault();
@@ -39,16 +47,17 @@ reset.addEventListener("click", (e) => {
 	searchResults.style.display = "none";
 	instructions.style.display = "block";
 	reset.style.display = "none";
+	resetMapPaths.style.display = "none";
 	flightTable.removeChild(flightTable.firstChild);
 	d3.select("#map").select("svg").remove();
 })
 
-searchForm.addEventListener("submit", async(e) => {
+searchForm.addEventListener("submit", async (e) => {
 	e.preventDefault();
 
 	let value = searchValue.value;
 	// airport ICAO
-	if(value === "") value = "N/A";
+	if (value === "") value = "N/A";
 	let airportInfo = await getAirportInfo(value);
 	while (!airportInfo) {
 		airportInfo = await getAirportInfo(value);
@@ -61,17 +70,18 @@ searchForm.addEventListener("submit", async(e) => {
 	mainPage.style.display = "flex";
 	background.style.display = "none";
 	reset.style.display = "block";
-	map.style.display = "block"
+	map.style.display = "block";
+	resetMapPaths.style.display = "block";
 
 	// 1 day = 86400, 1 hr = 3600
 	departures = await getAirportDepartures(airportICAO, calculateTime(6), calculateTime());
-	
+
 	// callsign = Plane identifier i.e. DAL767
 	addFlightTable(departures);
 	addMap([airportLongitude, airportLatitude], airportICAO);
 });
 
-const addFlightTable = async(info) => {
+const addFlightTable = async (info) => {
 	let table = document.createElement("table");
 	let tableBody = document.createElement("tbody");
 
@@ -94,7 +104,7 @@ const addFlightTable = async(info) => {
 	tableBody.appendChild(colRow);
 
 	// actual data
-	for(let i = 0; i < info.length; i++){
+	for (let i = 0; i < info.length; i++) {
 		const row = document.createElement("tr");
 
 		const callsign = document.createElement("td");
@@ -102,21 +112,22 @@ const addFlightTable = async(info) => {
 		callsign.classList.add("clickable");
 
 		// allows clickable planes => gets location info about clicked plane
-		callsign.addEventListener("click", async(e) => {
+		callsign.addEventListener("click", async (e) => {
 			e.stopPropagation();
 			locations = getFlightLocation(info[i].icao24);
-			if(locations !== 'No data found') drawPath(locations, callsign.textContent);
+			if (locations !== 'No data found') drawPath(locations, callsign.textContent);
 		})
 
 		const departureTime = document.createElement("td");
 		const date = new Date(info[i].firstSeen * 1000).toString();
-		departureTime.textContent = date.slice(0, 28);
+		console.log(date);
+		departureTime.textContent = date;
 
 		const departureAirport = document.createElement("td");
 		departureAirport.textContent = info[i].estDepartureAirport;
 
 		let arrivalAirport = document.createElement("td");
-		if(info[i].estArrivalAirport === null){
+		if (info[i].estArrivalAirport === null) {
 			arrivalAirport.textContent = "TBD";
 		} else {
 			arrivalAirport.textContent = info[i].estArrivalAirport;
@@ -135,17 +146,25 @@ const addFlightTable = async(info) => {
 }
 
 const addResults = (matches) => {
-	while(searchResults.firstChild){
+	while (searchResults.firstChild) {
 		searchResults.removeChild(searchResults.firstChild);
 	}
 	matches.forEach(match => {
 		const result = document.createElement("div");
 		result.textContent = match;
-		result.addEventListener("click", (e)=> {
+		result.addEventListener("click", (e) => {
 			e.stopPropagation();
 			searchValue.value = result.textContent;
+			searchResults.style.display = "none";
+			resultClicked = true;
+			instructions.style.display = "block";
 		});
 		searchResults.appendChild(result);
 	});
-	searchResults.style.display = "block";
+
+	if (!resultClicked) {
+		searchResults.style.display = "block";
+	}
 }
+
+resetMapPaths.addEventListener("click", resetPaths);
