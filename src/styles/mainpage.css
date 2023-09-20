@@ -64,12 +64,13 @@ tr:nth-child(even){
 	border: 1px solid black;
 	margin: 20px;
 	cursor: pointer;
+	position: relative;
 }
 
 
 .clickable {
 	color: blue;
-	text-decoration: underline;
+	/* text-decoration: underline; */
 }
 
 .clickable:hover {
@@ -82,5 +83,12 @@ tr:nth-child(even){
 }
 
 .reset-paths {
+	display: none;
+	position: absolute;
+	left: 10px;
+	bottom: 10px;
+}
+
+.flight-history {
 	display: none;
 }

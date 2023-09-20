@@ -12,6 +12,7 @@ const instructions = document.querySelector(".instructions");
 const reset = document.querySelector(".reset");
 const map = document.querySelector("#map");
 const resetMapPaths = document.querySelector(".reset-paths");
+const flightHistory = document.querySelector(".flight-history");
 
 let departures;
 let locations;
@@ -48,6 +49,7 @@ reset.addEventListener("click", (e) => {
 	instructions.style.display = "block";
 	reset.style.display = "none";
 	resetMapPaths.style.display = "none";
+	flightHistory.style.display = "none";
 	flightTable.removeChild(flightTable.firstChild);
 	d3.select("#map").select("svg").remove();
 })

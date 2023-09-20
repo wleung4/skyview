@@ -22,8 +22,8 @@
 		<div>
 			<a href="https://github.com/wleung4" target="_blank"><img class="icon" src="./assets/github-mark.png"></a>
 			<a href="https://www.linkedin.com/in/weyman-leung" target="_blank"><img class="icon"
-				src="./assets/linkedin.png"></a>
-			</div>
+					src="./assets/linkedin.png"></a>
+		</div>
 	</nav>
 </header>
 
@@ -37,7 +37,7 @@
 			</form>
 			<div id="search-results"></div>
 			<div>
-				<ul class="instructions"> 
+				<ul class="instructions">
 					<li>Instructions:</li>
 					<li>Enter an airport name into the search bar</li>
 					<li>Resulting airports matching what was entered will be shown</li>
@@ -52,13 +52,16 @@
 		<video id="background" autoplay muted loop>
 			<source src="./assets/wing-video.mp4" type="video/mp4">
 		</video>
-	
+
 		<div class="main-page">
-			<div id="map" class="map-style"></div>
+			<div id="map" class="map-style">
+				<button class="reset-paths">Clear</button>
+			</div>
 			<div id="flight-table"></div>
 		</div>
-		<button class="reset-paths">Reset Paths</button>
-
+		<div class="flight-history">
+			Flight History
+		</div>
 	</div>
 </body>
 <footer class="footer">
