@@ -14,6 +14,7 @@ const map = document.querySelector("#map");
 const resetMapPaths = document.querySelector(".reset-paths");
 const flightHistory = document.querySelector("#flight-history");
 const mapTableDiv = document.querySelector(".map-and-flight-table");
+const footer = document.querySelector(".footer");
 
 let departures;
 let locations;
@@ -55,6 +56,7 @@ reset.addEventListener("click", (e) => {
 	flightTable.removeChild(flightTable.firstChild);
 	flightHistory.removeChild(flightHistory.firstChild);
 	mapTableDiv.style.display = "none";
+	footer.style.display = "block";
 })
 
 searchForm.addEventListener("submit", async (e) => {
@@ -77,6 +79,7 @@ searchForm.addEventListener("submit", async (e) => {
 	reset.style.display = "block";
 	mapTableDiv.style.display = "flex";
 	map.style.display = "block";
+	footer.style.display = "none";
 
 	// 1 day = 86400, 1 hr = 3600
 	departures = await getAirportDepartures(airportICAO, calculateTime(6), calculateTime());
@@ -124,8 +127,9 @@ const addFlightTable = async (info) => {
 			if (locations !== 'No data found') {
 				drawPath(locations, callsign.textContent);
 				const history = await getAircraft(info[i].icao24, calculateTime(24 * 14), calculateTime());
-				flightHistory.style.display = "none";
-				flightHistory.removeChild(flightHistory.firstChild);
+				while(flightHistory.firstChild) {
+					flightHistory.removeChild(flightHistory.firstChild);
+				}
 				addFlightHistory(history);
 				flightHistory.style.display = "block";
 			}

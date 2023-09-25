@@ -103,6 +103,7 @@ tr:nth-child(even){
 	display: none;
 	position: absolute;
 	top: 700px;
+	padding-bottom: 20px;
 }
 
 #flight-history:first-child {
