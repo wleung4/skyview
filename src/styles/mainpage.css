@@ -23,8 +23,10 @@
 }
 
 .main-page {
-	display: none;
+	display: flex;
+	flex-direction: column;
 	justify-content: center;
+	width: 100%;
 }
 
 .header {
@@ -35,7 +37,7 @@
 .table-style {
 	margin: 20px;
 	display: block;
-	max-height: 600;
+	max-height: 600px;
 	overflow-y: auto;
 	border-collapse: collapse;
 
@@ -55,8 +57,8 @@ tr:nth-child(even){
 }
 
 .map-style {
-	max-width: 800;
-	max-height: 600;
+	max-width: 800px;
+	max-height: 600px;
 	background-color: lightblue;
 	stroke: black;
 	stroke-width: 0.1;
@@ -89,6 +91,20 @@ tr:nth-child(even){
 	bottom: 10px;
 }
 
-.flight-history {
+
+.map-and-flight-table {
 	display: none;
+	flex-direction: row;
+	top: 70px;
+	position: absolute;
+}
+
+#flight-history {
+	display: none;
+	position: absolute;
+	top: 700px;
+}
+
+#flight-history:first-child {
+	overflow-y: scroll;
 }

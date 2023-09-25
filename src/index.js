@@ -1,5 +1,5 @@
 import { getAirportInfo, search } from './scripts/airport.js';
-import { calculateTime, getAirportDepartures, getFlightLocation } from './scripts/flight.js';
+import { calculateTime, getAircraft, getAirportDepartures, getFlightLocation } from './scripts/flight.js';
 import { addMap, drawPath, resetPaths } from './scripts/map.js';
 
 const searchForm = document.querySelector(".home-search");
@@ -12,7 +12,8 @@ const instructions = document.querySelector(".instructions");
 const reset = document.querySelector(".reset");
 const map = document.querySelector("#map");
 const resetMapPaths = document.querySelector(".reset-paths");
-const flightHistory = document.querySelector(".flight-history");
+const flightHistory = document.querySelector("#flight-history");
+const mapTableDiv = document.querySelector(".map-and-flight-table");
 
 let departures;
 let locations;
@@ -50,8 +51,10 @@ reset.addEventListener("click", (e) => {
 	reset.style.display = "none";
 	resetMapPaths.style.display = "none";
 	flightHistory.style.display = "none";
-	flightTable.removeChild(flightTable.firstChild);
 	d3.select("#map").select("svg").remove();
+	flightTable.removeChild(flightTable.firstChild);
+	flightHistory.removeChild(flightHistory.firstChild);
+	mapTableDiv.style.display = "none";
 })
 
 searchForm.addEventListener("submit", async (e) => {
@@ -72,15 +75,16 @@ searchForm.addEventListener("submit", async (e) => {
 	mainPage.style.display = "flex";
 	background.style.display = "none";
 	reset.style.display = "block";
+	mapTableDiv.style.display = "flex";
 	map.style.display = "block";
-	resetMapPaths.style.display = "block";
 
 	// 1 day = 86400, 1 hr = 3600
 	departures = await getAirportDepartures(airportICAO, calculateTime(6), calculateTime());
 
 	// callsign = Plane identifier i.e. DAL767
-	addFlightTable(departures);
-	addMap([airportLongitude, airportLatitude], airportICAO);
+	await addFlightTable(departures);
+
+	await addMap([airportLongitude, airportLatitude], airportICAO);
 });
 
 const addFlightTable = async (info) => {
@@ -91,7 +95,7 @@ const addFlightTable = async (info) => {
 	const colRow = document.createElement("tr");
 	colRow.classList.add("header");
 	const callsignCol = document.createElement("td");
-	callsignCol.textContent = "Plane";
+	callsignCol.textContent = "Flight";
 	const departureTimeCol = document.createElement("td");
 	departureTimeCol.textContent = "Time Departed";
 	const departureAirportCol = document.createElement("td");
@@ -117,12 +121,18 @@ const addFlightTable = async (info) => {
 		callsign.addEventListener("click", async (e) => {
 			e.stopPropagation();
 			locations = getFlightLocation(info[i].icao24);
-			if (locations !== 'No data found') drawPath(locations, callsign.textContent);
+			if (locations !== 'No data found') {
+				drawPath(locations, callsign.textContent);
+				const history = await getAircraft(info[i].icao24, calculateTime(24 * 14), calculateTime());
+				flightHistory.style.display = "none";
+				flightHistory.removeChild(flightHistory.firstChild);
+				addFlightHistory(history);
+				flightHistory.style.display = "block";
+			}
 		})
 
 		const departureTime = document.createElement("td");
 		const date = new Date(info[i].firstSeen * 1000).toString();
-		console.log(date);
 		departureTime.textContent = date;
 
 		const departureAirport = document.createElement("td");
@@ -170,3 +180,72 @@ const addResults = (matches) => {
 }
 
 resetMapPaths.addEventListener("click", resetPaths);
+
+const addFlightHistory = info => {
+	let historyTable = document.createElement("table");
+	let historyTableBody = document.createElement("tbody");
+
+	const colRow = document.createElement("tr");
+	colRow.classList.add("header");
+	const callsignCol = document.createElement("td");
+	callsignCol.textContent = "Flight";
+	const departureTimeCol = document.createElement("td");
+	departureTimeCol.textContent = "Time Departed";
+	const arrivalTimeCol = document.createElement("td");
+	arrivalTimeCol.textContent = "Time Arrived";
+	const departureAirportCol = document.createElement("td");
+	departureAirportCol.textContent = "From";
+	const arrivalAirportCol = document.createElement("td");
+	arrivalAirportCol.textContent = "To";
+
+	colRow.appendChild(callsignCol);
+	colRow.appendChild(departureTimeCol);
+	colRow.appendChild(arrivalTimeCol);
+	colRow.appendChild(departureAirportCol);
+	colRow.appendChild(arrivalAirportCol);
+	historyTableBody.appendChild(colRow);
+
+	for (let i = 0; i < info.length; i++) {
+		const row = document.createElement("tr");
+
+		const callsign = document.createElement("td");
+		callsign.textContent = info[i].callsign;
+
+		const departureTime = document.createElement("td");
+		const departureDate = new Date(info[i].firstSeen * 1000).toString();
+		departureTime.textContent = departureDate;
+
+		const arrivalTime = document.createElement("td");
+		const arrivalDate = new Date(info[i].lastSeen * 1000).toString();
+		if (i === 0) {
+			arrivalTime.textContent = "TBD";
+		} else {
+			arrivalTime.textContent = arrivalDate;
+		}
+
+		const departureAirport = document.createElement("td");
+		if(info[i].estDepartureAirport === null) {
+			departureAirport.textContent = "N/A";
+		} else {
+			departureAirport.textContent = info[i].estDepartureAirport;
+		}
+
+		let arrivalAirport = document.createElement("td");
+		if (info[i].estArrivalAirport === null) {
+			arrivalAirport.textContent = "N/A";
+		} else {
+			arrivalAirport.textContent = info[i].estArrivalAirport;
+		}
+
+		row.appendChild(callsign);
+		row.appendChild(departureTime);
+		row.appendChild(arrivalTime);
+		row.appendChild(departureAirport);
+		row.appendChild(arrivalAirport);
+
+		historyTableBody.appendChild(row);
+	}
+	historyTable.appendChild(historyTableBody);
+	flightHistory.appendChild(historyTable);
+	flightHistory.classList.add("table-style");
+}
