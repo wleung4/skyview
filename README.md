@@ -86,7 +86,6 @@ After the airport is submitted, a map is generated using the javascript library 
 Below is a gif of how the map and table look upon submit of airport and how clicking the planes creates line paths for the plane.
 ![](./assets/main-page.gif)
 
-**<h2>To Do/Additional Features </h2>**
-* Add plane history data underneath map and flight table
+**<h2>Future Features </h2>**
 * Swap to API with more up to date flight information regarding arrivals and locations
 
