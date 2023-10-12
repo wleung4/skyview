@@ -1,6 +1,6 @@
 <!-- **Background** 
 
-SkyView is a website that allows users to search for flight information at a specific airport. Upon selecting an airport, users will be able to select a particular flight to see the current location of the flight and its path to the airport.
+SkyView is a website that allows users to search for flight information at a specific airport. Upon selecting an airport, users will be able to select a particular flight to see the current location of the flight and its path to the airport. Users are also able to see the past flight information for the selected airplane.
 
 **Functionality**
 
