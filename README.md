@@ -10,6 +10,7 @@ In SkyView, users will be able to:
 * **View Map:** Visualize flights on the map around the airport.
 * **Select Flight:** Highlight a particular flight on the map.
 * **View Flight Details:** See specific details regarding the selected flight aircraft.
+* **View Plane History:** See plane history for a selected aircraft.
 
 **Wireframes**
 
